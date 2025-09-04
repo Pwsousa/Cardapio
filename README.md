@@ -106,7 +106,7 @@ O microserviço está configurado para:
 - **Porta**: 8082
 - **Banco**: MySQL (cardapio)
 - **Eureka**: Registrado automaticamente
-- **Gateway**: Acessível via http://localhost:8084/cardapio
+- **Gateway**: Acessível via http://localhost:8082/cardapio
 
 ## Desenvolvimento
 Para contribuir com o desenvolvimento:
