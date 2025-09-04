@@ -44,22 +44,44 @@ public class ItemCardapioService {
 
     public ItemCardapioDTO criarItem(ItemCardapioDTO dto) {
         ItemCardapio item = modelMapper.map(dto, ItemCardapio.class);
-        item.setStatus(Status.ATIVO);
-        item.setDisponivel(true);
+        if (item.getStatus() == null) {
+            item.setStatus(Status.ATIVO);
+        }
+        if (!item.isDisponivel()) {
+            item.setDisponivel(true);
+        }
         repository.save(item);
         return modelMapper.map(item, ItemCardapioDTO.class);
     }
 
     public ItemCardapioDTO atualizarItem(Long id, ItemCardapioDTO dto) {
-        if (!repository.existsById(id)) {
-            throw new EntityNotFoundException("Item não encontrado com ID: " + id);
+        ItemCardapio itemExistente = repository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Item não encontrado com ID: " + id));
+        
+        // Atualizar apenas os campos fornecidos
+        if (dto.getNome() != null) {
+            itemExistente.setNome(dto.getNome());
         }
+        if (dto.getDescricao() != null) {
+            itemExistente.setDescricao(dto.getDescricao());
+        }
+        if (dto.getPreco() != null) {
+            itemExistente.setPreco(dto.getPreco());
+        }
+        if (dto.getCategoria() != null) {
+            itemExistente.setCategoria(dto.getCategoria());
+        }
+        if (dto.getStatus() != null) {
+            itemExistente.setStatus(dto.getStatus());
+        }
+        if (dto.getImagemUrl() != null) {
+            itemExistente.setImagemUrl(dto.getImagemUrl());
+        }
+        itemExistente.setDisponivel(dto.isDisponivel());
         
-        ItemCardapio itemAtualizado = modelMapper.map(dto, ItemCardapio.class);
-        itemAtualizado.setId(id);
-        repository.save(itemAtualizado);
+        repository.save(itemExistente);
         
-        return modelMapper.map(itemAtualizado, ItemCardapioDTO.class);
+        return modelMapper.map(itemExistente, ItemCardapioDTO.class);
     }
 
     public void excluirItem(Long id) {

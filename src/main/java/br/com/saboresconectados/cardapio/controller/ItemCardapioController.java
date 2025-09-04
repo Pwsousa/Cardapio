@@ -19,10 +19,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 import java.math.BigDecimal;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
-@RequestMapping("/cardapio")
+@RequestMapping("/cardapio/itens")
 public class ItemCardapioController {
     
     @Autowired
@@ -49,12 +51,21 @@ public class ItemCardapioController {
         return String.format("Requisição respondida pela instância executando na porta %s", porta);
     }
 
+    @GetMapping("/health")
+    public ResponseEntity<Map<String, Object>> health() {
+        Map<String, Object> health = new HashMap<>();
+        health.put("status", "UP");
+        health.put("service", "cardapio-service");
+        health.put("timestamp", System.currentTimeMillis());
+        return ResponseEntity.ok(health);
+    }
+
     @PostMapping()
     public ResponseEntity<ItemCardapioDTO> cadastrar(@RequestBody @Valid ItemCardapioDTO dto,
                                                     UriComponentsBuilder uriBuilder) {
         ItemCardapioDTO item = service.criarItem(dto);
         URI endereco = uriBuilder
-                .path("/cardapio/{id}")
+                .path("/cardapio/itens/{id}")
                 .buildAndExpand(item.getId())
                 .toUri();
         return ResponseEntity.created(endereco).body(item);
