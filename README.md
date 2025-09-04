@@ -88,7 +88,7 @@ docker run -p 8082:8082 cardapio-service
 curl http://localhost:8084/cardapio/todos
 
 # Criar novo item
-curl -X POST http://localhost:8084/cardapio \
+curl -X POST http://localhost:8082/cardapio \
   -H "Content-Type: application/json" \
   -d '{
     "nome": "Hambúrguer Artesanal",
